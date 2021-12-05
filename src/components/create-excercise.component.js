@@ -1,4 +1,5 @@
 import { useState } from "react"
+import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -17,19 +18,24 @@ export default function CreateExcercise() {
             date : new Date(date),
         }
         console.log(excercise)
-        window.location = '/'
+
+        axios.post('http://localhost:5000/excercises/add', excercise)
+        .then(res => console.log(res.data))
+        .then(()=>window.location = '/')
+
+        // window.location = '/'  //to redirect to homepage
         return excercise
     }
 
 
     return (
-        <div>
+        <div className='container'>
             <h3>Create New Excercise</h3>
             <form onSubmit={(e)=>handleExcerciseSubmit(e)}>
                 <div className="form-group">
                     <label htmlFor="username">Username: </label>
                     <input 
-                        type="text" 
+                        type="text" required 
                         className="form-control"
                         value={username}
                         onChange={(e)=> setUsername(e.target.value)} 
@@ -39,7 +45,7 @@ export default function CreateExcercise() {
                 <div className="form-group">
                     <label htmlFor="description">Description: </label>
                     <input 
-                        type="text" 
+                        type="text" required 
                         className="form-control"
                         value={description}
                         onChange={(e)=> setDescription(e.target.value)} 
@@ -49,7 +55,7 @@ export default function CreateExcercise() {
                 <div className="form-group">
                     <label htmlFor="duration">Duration(in minutes): </label>
                     <input 
-                        type="number"
+                        type="number" required
                         min = {0}
                         className="form-control"
                         value={duration}
@@ -68,18 +74,18 @@ export default function CreateExcercise() {
                 </div>
 
                 <div className="form-group">
-                    <input type="submit" value="Create Excercise" className="btn btn-primary" />
+                    <button type="submit" className="btn btn-primary mt-3">Create Excercise</button>
                 </div>
             </form>
 
             {/* <form>
                 <input 
-                    type="text"
+                    type="text" required
                     onChange={(e)=> setUsername(e.target.value)} 
                     name="username"
                 />
                 <input 
-                    type="text"
+                    type="text" required
                     onChange={(e)=> setDescription(e.target.value)} 
                     name="description"
                 />
