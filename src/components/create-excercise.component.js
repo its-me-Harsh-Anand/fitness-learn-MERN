@@ -12,13 +12,12 @@ export default function CreateExcercise() {
     
     useEffect(() => {
         const users = []
-        axios.get('http://localhost:5000/users')
+        axios.get('https://backend-fitness.herokuapp.com/users')
         .then(res=> res.data.forEach(data => {
             users.push(data.username);
         })).then(()=>setUser(users))
     }, [])
 
-    console.log(user)
     function handleExcerciseSubmit(e){
         e.preventDefault()
         if(user.length <= 0){
@@ -32,7 +31,7 @@ export default function CreateExcercise() {
         }
         console.log(excercise)
 
-        axios.post('http://localhost:5000/excercises/add', excercise)
+        axios.post('https://backend-fitness.herokuapp.com/excercises/add', excercise)
         .then(res => console.log(res.data))
         .then(()=>window.location = '/')
 

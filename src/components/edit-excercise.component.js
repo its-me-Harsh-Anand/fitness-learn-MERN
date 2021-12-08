@@ -9,10 +9,19 @@ export default function EditExcercise() {
     const [description, setDescription] = useState('')
     const [duration, setDuration] = useState(0)
     const [date, setDate] = useState(new Date())
+    const [user, setUser] = useState([])
     const {id} = useParams()
     
+    useEffect(() => {
+        const users = []
+        axios.get('https://backend-fitness.herokuapp.com/users')
+        .then(res=> res.data.forEach(data => {
+            users.push(data.username);
+        })).then(()=>setUser(users))
+    }, [])
+    
     useEffect(()=>{
-        axios.get(`http://localhost:5000/excercises/${id}`)
+        axios.get(`https://backend-fitness.herokuapp.com/excercises/${id}`)
         .then(res => {
             setUsername(res.data.username)
             setDescription(res.data.description)
@@ -33,7 +42,7 @@ export default function EditExcercise() {
         }
         console.log(excercise)
 
-        axios.post(`http://localhost:5000/excercises/update/${id}`, excercise)
+        axios.post(`https://backend-fitness.herokuapp.com/excercises/update/${id}`, excercise)
         .then(res => console.log(res.data))
         .then(()=>window.location = '/')
 
@@ -48,12 +57,20 @@ export default function EditExcercise() {
             <form onSubmit={(e)=>handleExcerciseSubmit(e)}>
                 <div className="form-group">
                     <label htmlFor="username">Username: </label>
-                    <input 
-                        type="text" required 
-                        className="form-control"
+                    <select
+                        required
+                        className= "form-control"
                         value={username}
-                        onChange={(e)=> setUsername(e.target.value)} 
-                    />
+                        onChange={(e)=> setUsername(e.target.value)}
+                    >
+                        {
+                            user.map((user, index)=>{
+                                return <option key = {index} value={user}>
+                                    {user}
+                                </option>
+                            })
+                        }
+                    </select>
                 </div>
 
                 <div className="form-group">

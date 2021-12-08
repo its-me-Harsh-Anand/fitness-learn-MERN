@@ -7,7 +7,7 @@ export default function ExcerciseList() {
     const [excercises, setExcercises] =  useState([])
 
     useEffect(() => {
-            axios.get('http://localhost:5000/excercises')
+            axios.get('https://backend-fitness.herokuapp.com/excercises')
             .then(res => setExcercises(res.data.sort(sortByDate)))
         }, [])
 
@@ -16,7 +16,7 @@ export default function ExcerciseList() {
     
 
     function deleteExcercise(id){
-        axios.delete(`http://localhost:5000/excercises/${id}`)
+        axios.delete(`https://backend-fitness.herokuapp.com/excercises/${id}`)
         .then(res => console.log(res.data))
         .then(()=>{
             const afterDeleteExcercise = excercises.filter(excercise=> excercise._id !== id)
