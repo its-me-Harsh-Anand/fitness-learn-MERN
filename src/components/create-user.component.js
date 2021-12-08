@@ -16,6 +16,7 @@ export default function CreateUser() {
         .then(res => console.log(res.data))
         
         setUsername('')
+        alert("Username " + username + " created")
         return user
     }
     return (

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
@@ -8,9 +8,22 @@ export default function CreateExcercise() {
     const [description, setDescription] = useState('')
     const [duration, setDuration] = useState(0)
     const [date, setDate] = useState(new Date())
+    const [user, setUser] = useState([])
+    
+    useEffect(() => {
+        const users = []
+        axios.get('http://localhost:5000/users')
+        .then(res=> res.data.forEach(data => {
+            users.push(data.username);
+        })).then(()=>setUser(users))
+    }, [])
 
+    console.log(user)
     function handleExcerciseSubmit(e){
         e.preventDefault()
+        if(user.length <= 0){
+            return
+        }
         const excercise = {
             username : username,
             description : description,
@@ -31,15 +44,26 @@ export default function CreateExcercise() {
     return (
         <div className='container'>
             <h3>Create New Excercise</h3>
+            {
+                user.length === 0 && <div>There is no user created. First, create atleast one user</div>
+            }
             <form onSubmit={(e)=>handleExcerciseSubmit(e)}>
                 <div className="form-group">
                     <label htmlFor="username">Username: </label>
-                    <input 
-                        type="text" required 
-                        className="form-control"
+                    <select
+                        required
+                        className= "form-control"
                         value={username}
-                        onChange={(e)=> setUsername(e.target.value)} 
-                    />
+                        onChange={(e)=> setUsername(e.target.value)}
+                    >
+                        {
+                            user.map((user, index)=>{
+                                return <option key = {index} value={user}>
+                                    {user}
+                                </option>
+                            })
+                        }
+                    </select>
                 </div>
 
                 <div className="form-group">
@@ -77,28 +101,6 @@ export default function CreateExcercise() {
                     <button type="submit" className="btn btn-primary mt-3">Create Excercise</button>
                 </div>
             </form>
-
-            {/* <form>
-                <input 
-                    type="text" required
-                    onChange={(e)=> setUsername(e.target.value)} 
-                    name="username"
-                />
-                <input 
-                    type="text" required
-                    onChange={(e)=> setDescription(e.target.value)} 
-                    name="description"
-                />
-                <input 
-                    type="number"
-                    min="0"
-                    onChange={(e)=> setDuration(e.target.value)} 
-                    name="duration"
-                />
-                <button 
-                    onClick={(e)=>handleExcerciseSubmit(e)}
-                >Create Excercise</button>
-            </form> */}
         </div>
     )
 }
